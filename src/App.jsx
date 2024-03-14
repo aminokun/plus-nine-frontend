@@ -1,6 +1,6 @@
-import { useState } from 'react'
 import './App.css'
-import { axiosWeatherForecast as weatherForecast } from './components/weatherForecast'
+import { axiosTeams } from './components/Teams'
+import TeamCard from './components/TeamCard'
 
 
 function App() {
@@ -10,7 +10,8 @@ function App() {
     <>
       <h1 className="font-bold">Testing connection with backend</h1>
       <p className="font-bold">Let's get started!</p>
-      <button onClick={weatherForecast}>Get Weather Forecast</button>
+      {/* <TeamCard /> */}
+      <button onClick={axiosTeams}>Get Teams</button>
     </>
   )
 }
