@@ -1,9 +1,11 @@
+import { CreateObjective } from '@/components/CreateObjective'
 import ObjectiveCard from '../components/ObjectiveCard'
 
 const Quest = () => {
     return (
-        <div>
+        <div className='flex-col justify-center items-center'>
             <ObjectiveCard />
+            <CreateObjective className='mt-2' />
         </div>
     )
 }

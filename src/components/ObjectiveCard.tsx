@@ -1,75 +1,69 @@
 import { useEffect, useState } from 'react';
-import { IObjectiveItem, objective } from '../constants'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
+import { IObjectiveDataResponse } from '@/types/objective.type';
+import { defaultObjectiveResponse } from '@/constants';
 
 const ObjectiveCard = () => {
-    const [data, setData] = useState([])
-    // const [loading, setLoading] = useState(true)
-
+    const [objective, setObjective] = useState(defaultObjectiveResponse)
     useEffect(() => {
-        const fetchData = async () => {
-            // setLoading(true);
-            try {
-                const { data: response } = await axios.get<IObjectiveItem[]>('https://localhost:7299/api/objective', {
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                })
-                    .then(response => {
-                        setData(response.data);
-
-                    });
-            } catch (error) {
-                console.error(error)
+        return () => {
+            const fetchObjective = async (): Promise<IObjectiveDataResponse> => {
+                const response: AxiosResponse = await axios.get("http://localhost:5181/api/Objective");
+                const responseData: any = response.data;
+                setObjective(responseData);
+                console.log(responseData)
+                return responseData;
             }
-            // setLoading(false);
+            fetchObjective();
         }
-        fetchData();
-    }, [])
+    }, [10])
+
 
     return (
         <div className="container flex items-center justify-center">
-
-            <div className='relative rounded-sm border-2 border-opacity-30 w-[25rem] h-[40rem]  border-solo bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#27486B] from-20% via-[#1F3044] via-60% to-[#121A22]' >
+            <div className='relative rounded-sm border-2 border-opacity-30 h-[40rem] min-w-[23rem] w-[25rem] border-solo bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#27486B] from-20% via-[#1F3044] via-60% to-[#121A22]' >
                 <div className='absolute h-[1.5rem] w-[90%] bg-gradient-to-b from-solo from-1% blur-md left-5 top-[3rem]  ' />
                 <div className='absolute h-[1.5rem] w-[90%] bg-gradient-to-t from-solo from-1% blur-md left-5 top-[4.9rem]  ' />
                 <div className="text-primary-foreground pt-[3rem] px-[2rem]">
                     <div className="relative">
                         <div className="relative flex-col items-center justify-center">
-                            <h3 className='flex justify-center w-full text-shadow-xl shadow-black'>
-                                <div className="border-2 mt-1 mr-2 rounded-full text-lg w-[2rem] h-[2rem] text-red-200">!</div>
+                            <h3 className='flex justify-center w-full text-shadow-xl dark:text-white shadow-black'>
+                                <div className="border-2 dark:border-white mt-1 mr-2 rounded-full text-lg w-[2rem] h-[2rem] text-red-200">!</div>
                                 Quest Info
                             </h3>
-                            <p className="mt-[2rem] uppercase font-medium text-sm text-shadow-lg shadow-black">
+                            <p className="mt-[2rem] uppercase font-medium text-sm text-shadow-lg dark:text-white shadow-black">
                                 Daily Quest - Train to become<br /> a formidable combatant
                             </p>
-                            <div className="mt-[3rem] font-bold text-green-500 text-shadow-lg shadow-black text-lg">
+                            <div className="mt-[2rem] font-bold text-green-500 text-shadow-lg shadow-black text-lg">
                                 Goals
                             </div>
-                            <ul className="">
+                            <ul className="overflow-hidden container overflow-y-auto scroll-smooth rounded-sm border-y-2 border-opacity-30 max-h-[14.5rem] min-h-[10.5rem] border-solo">
                                 {objective.map((item, key) => (
-                                    <li
+                                    <a
+                                        href={`/quest/details=?${item.id}`}
+                                        className=""
                                         key={key}
-                                        className="text-shadow-xl shadow-black text-md font-normal uppercase"
                                     >
-                                        <div className="mt-4 flex justify-between">
-                                            <div>
-                                                - {item.objectiveName}
+                                        <li
+                                            className="text-shadow-xl dark:text-white pointer-events-auto shadow-black xs:text-md 2xs:text-sm font-normal uppercase"
+                                        >
+                                            <div className="mt-4 flex justify-between">
+                                                <div>
+                                                    - {item.objectiveName}
+                                                </div>
+                                                <div>
+                                                    [{item.currentAmount}{`/`}{item.amountToComplete}]
+                                                </div>
                                             </div>
-                                            <div>
-                                                [{item.currentAmount}{`/`}{item.amountToComplete}]
-                                            </div>
-                                        </div>
-                                    </li>
+                                        </li>
+                                    </a>
                                 ))}
                             </ul>
-                            <div className="relative">
-                                <p className="absolute left-[3.7rem] top-[10rem] text-shadow-xl shadow-black text-sm uppercase"><span className='text-red-500 font-bold'>CAUTION!</span>- if the daily quest <br />remains incomplete, penalties,<br /> will be given accordingly</p>
-                                <svg className='absolute left-[9rem] top-[16rem]' width={50} height={50} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                </svg>
-                            </div>
                         </div>
+                        <p className="absolute 2xs:left-[2.5rem] xs:left-[3.5rem] top-[27rem] dark:text-white text-shadow-xl shadow-black text-sm uppercase"><span className='text-red-500 font-bold'>CAUTION!</span>- if the daily quest <br />remains incomplete, penalties,<br /> will be given accordingly</p>
+                        <svg className='absolute 2xs:left-[8rem] xs:left-[9rem] top-[32rem]' width={50} height={50} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="white" >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
                     </div>
                 </div>
             </div>
