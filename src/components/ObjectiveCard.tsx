@@ -8,7 +8,7 @@ const ObjectiveCard = () => {
     useEffect(() => {
         return () => {
             const fetchObjective = async (): Promise<IObjectiveDataResponse> => {
-                const response: AxiosResponse = await axios.get("http://localhost:5181/api/Objective");
+                const response: AxiosResponse = await axios.get("https:api.aminokun.com/api/objective");
                 const responseData: any = response.data;
                 setObjective(responseData);
                 console.log(responseData)
