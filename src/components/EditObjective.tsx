@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
+import { Icons } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,24 +14,72 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { IObjectiveItem } from "@/types/objective.type"
 
 
-export function CreateObjective({ className = "" }: { className: string; }) {
+export function EditObjective({ className = "", id = "", isOpen, onClose, onUpdate }: { className?: string; id: string; isOpen: boolean; onClose: () => void; onUpdate: () => void; }) {
     const [progress, setProgress] = useState(0)
     const [currentAmount, setCurrentAmount] = useState(0)
     const [objectiveName, setObjectiveName] = useState("")
+    const [objectiveId, setObjectiveId] = useState(id)
     const [amountToComplete, setAmountToComplete] = useState(100)
     const { toast } = useToast()
+    const [objective, setObjective] = useState<IObjectiveItem>()
 
-    const handleSubmit = async () => {
+    const getObjective = async () => {
+        try {
+            const response = await axios.get(`https://api.aminokun.com/api/objective/${id}`);
+            console.log(response.data);
+            const objective = response.data
+            setObjective(objective)
+            return objective
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const handleDelete = async () => {
+        if (currentAmount > amountToComplete) {
+            return toast({
+                title: "Uh oh! Something went wrong",
+                description: "The current amount cannot be larger than the total!",
+                variant: "destructive"
+            });
+        }
+        try {
+
+            const response = await axios.delete(`https://api.aminokun.com/api/objective/${objectiveId}`);
+            console.log(response.data);
+            onClose();
+            onUpdate();
+            return toast({
+                description: "Item has been deleted succesfully",
+            });
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleChanges = async () => {
         if (currentAmount > amountToComplete) {
             return toast({
                 title: "Uh oh! Something went wrong",
@@ -42,6 +91,7 @@ export function CreateObjective({ className = "" }: { className: string; }) {
             const completed = Completed();
 
             const data = {
+                objectiveId,
                 objectiveName,
                 currentAmount,
                 amountToComplete,
@@ -49,8 +99,13 @@ export function CreateObjective({ className = "" }: { className: string; }) {
                 completed
             };
 
-            const response = await axios.post('https://api.aminokun.com/api/objective', data);
+            const response = await axios.put('https://api.aminokun.com/api/objective', data);
             console.log(response.data);
+            onClose();
+            onUpdate();
+            return toast({
+                description: "Success, Item has been updated",
+            })
         } catch (error) {
             console.error(error);
         }
@@ -72,6 +127,23 @@ export function CreateObjective({ className = "" }: { className: string; }) {
         const timer = setTimeout(() => setProgress(progressPercentage), 500)
         return () => clearTimeout(timer)
     }
+
+    useEffect(() => {
+        if (id) {
+            getObjective();
+        }
+    }, [id]);
+
+    useEffect(() => {
+        if (objective) {
+            setObjectiveId(objective.objectiveId)
+            setObjectiveName(objective.objectiveName);
+            setCurrentAmount(objective.currentAmount);
+            setAmountToComplete(objective.amountToComplete);
+            setProgress((objective.currentAmount / objective.amountToComplete) * 100);
+        }
+    }, [objective]);
+
     useEffect(() => {
         progressCalc(currentAmount, amountToComplete);
     }, [currentAmount, amountToComplete]);
@@ -80,13 +152,10 @@ export function CreateObjective({ className = "" }: { className: string; }) {
         <div className={`${className}`}>
             <TooltipProvider>
                 <Tooltip delayDuration={300}>
-                    <Dialog >
-                        <DialogTrigger asChild>
-                            <Button variant="outline">Add Objective</Button>
-                        </DialogTrigger>
+                    <Dialog open={isOpen} onOpenChange={onClose}>
                         <DialogContent className="2xs:max-w-[370px] xs:max-w-[555px]">
                             <DialogHeader>
-                                <DialogTitle>Add Objective</DialogTitle>
+                                <DialogTitle>Edit Objective</DialogTitle>
                                 <DialogDescription>
                                     Add objectives to your daily quest here. Click save when you're done.
                                 </DialogDescription>
@@ -98,8 +167,8 @@ export function CreateObjective({ className = "" }: { className: string; }) {
                                     </Label>
                                     <Input
                                         id="ObjectiveName"
-                                        defaultValue=""
-                                        placeholder="Example: Push ups"
+                                        value={objectiveName}
+                                        placeholder={objective?.objectiveName}
                                         onChange={e => setObjectiveName(e.target.value)}
                                         className="col-span-2"
                                     />
@@ -110,9 +179,9 @@ export function CreateObjective({ className = "" }: { className: string; }) {
                                     </Label>
                                     <Input
                                         id="currentAmount"
-                                        defaultValue="0"
                                         type="number"
-                                        onChange={e => setCurrentAmount(parseInt(e.target.value))}
+                                        value={currentAmount.toString()}
+                                        onChange={e => setCurrentAmount(parseInt(e.target.value, 10))}
                                         className="col-span-2"
                                     />
                                 </div>
@@ -121,10 +190,10 @@ export function CreateObjective({ className = "" }: { className: string; }) {
                                         Amount to Complete
                                     </Label>
                                     <Input
-                                        id="currentAmount"
-                                        defaultValue="100"
+                                        id="amountToComplete"
                                         type="number"
-                                        onChange={e => setAmountToComplete(parseInt(e.target.value))}
+                                        value={amountToComplete.toString()}
+                                        onChange={e => setAmountToComplete(parseInt(e.target.value, 10))}
                                         className="col-span-2"
                                     />
                                 </div>
@@ -152,12 +221,30 @@ export function CreateObjective({ className = "" }: { className: string; }) {
 
                                 </div>
                             </div>
-                            <DialogFooter>
-                                <Button
-                                    type="submit"
-                                    onClick={handleSubmit}
-                                >
-                                    Create Objective
+                            <DialogFooter >
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Icons.trash className="mt-2 h-6 w-6" />
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone. This will permanently
+                                                delete this objective.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                                <Button variant="outline" onClick={onClose}>
+                                    Cancel
+                                </Button>
+                                <Button type="submit" onClick={handleChanges}>
+                                    Save Changes
                                 </Button>
                             </DialogFooter>
                         </DialogContent>

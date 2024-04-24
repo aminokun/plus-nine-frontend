@@ -2,13 +2,33 @@ import { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios'
 import { IObjectiveDataResponse } from '@/types/objective.type';
 import { defaultObjectiveResponse } from '@/constants';
+import { EditObjective } from './EditObjective';
 
 const ObjectiveCard = () => {
     const [objective, setObjective] = useState(defaultObjectiveResponse)
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedObjectiveId, setSelectedObjectiveId] = useState('');
+
+    const refetchObjectives = async () => {
+        try {
+            const response: AxiosResponse = await axios.get("https://api.aminokun.com/api/objective");
+            const responseData: any = response.data;
+            setObjective(responseData);
+            console.log(responseData);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleEdit = async (id: string) => {
+        setSelectedObjectiveId(id);
+        setIsEditModalOpen(true);
+    };
+
     useEffect(() => {
         return () => {
             const fetchObjective = async (): Promise<IObjectiveDataResponse> => {
-                const response: AxiosResponse = await axios.get("https:api.aminokun.com/api/objective");
+                const response: AxiosResponse = await axios.get("https://api.aminokun.com/api/objective");
                 const responseData: any = response.data;
                 setObjective(responseData);
                 console.log(responseData)
@@ -40,7 +60,7 @@ const ObjectiveCard = () => {
                             <ul className="overflow-hidden container overflow-y-auto scroll-smooth rounded-sm border-y-2 border-opacity-30 max-h-[14.5rem] min-h-[10.5rem] border-solo">
                                 {objective.map((item, key) => (
                                     <a
-                                        href={`/quest/details=?${item.id}`}
+                                        onClick={() => handleEdit(item.id)}
                                         className=""
                                         key={key}
                                     >
@@ -67,6 +87,13 @@ const ObjectiveCard = () => {
                     </div>
                 </div>
             </div>
+            <EditObjective
+                className=""
+                id={selectedObjectiveId}
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                onUpdate={refetchObjectives}
+            />
         </div>
     )
 }
