@@ -11,7 +11,7 @@ const ObjectiveCard = () => {
 
     const refetchObjectives = async () => {
         try {
-            const response: AxiosResponse = await axios.get("https://api.aminokun.com/api/objective");
+            const response: AxiosResponse = await axios.get("https://asp.aminokun.com/api/objective");
             const responseData: any = response.data;
             setObjective(responseData);
             console.log(responseData);
@@ -28,7 +28,7 @@ const ObjectiveCard = () => {
     useEffect(() => {
         return () => {
             const fetchObjective = async (): Promise<IObjectiveDataResponse> => {
-                const response: AxiosResponse = await axios.get("https://api.aminokun.com/api/objective");
+                const response: AxiosResponse = await axios.get("https://asp.aminokun.com/api/objective");
                 const responseData: any = response.data;
                 setObjective(responseData);
                 console.log(responseData)
