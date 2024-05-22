@@ -5,7 +5,8 @@ const Quest = () => {
     return (
         <div className='flex-col justify-center items-center'>
             <ObjectiveCard />
-            <CreateObjective className='mt-2' />
+            <CreateObjective className='mt-2'
+            />
         </div>
     )
 }

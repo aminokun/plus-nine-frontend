@@ -46,7 +46,7 @@ export function EditObjective({ className = "", id = "", isOpen, onClose, onUpda
 
     const getObjective = async () => {
         try {
-            const response = await axios.get(`https://api.aminokun.com/api/objective/${id}`);
+            const response = await axios.get(`https://asp.aminokun.com/api/objective/${id}`);
             console.log(response.data);
             const objective = response.data
             setObjective(objective)
@@ -66,7 +66,7 @@ export function EditObjective({ className = "", id = "", isOpen, onClose, onUpda
         }
         try {
 
-            const response = await axios.delete(`https://api.aminokun.com/api/objective/${objectiveId}`);
+            const response = await axios.delete(`https://asp.aminokun.com/api/objective/${objectiveId}`);
             console.log(response.data);
             onClose();
             onUpdate();
@@ -99,7 +99,7 @@ export function EditObjective({ className = "", id = "", isOpen, onClose, onUpda
                 completed
             };
 
-            const response = await axios.put('https://api.aminokun.com/api/objective', data);
+            const response = await axios.put('https://asp.aminokun.com/api/objective', data);
             console.log(response.data);
             onClose();
             onUpdate();

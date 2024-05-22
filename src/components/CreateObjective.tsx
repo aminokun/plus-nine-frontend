@@ -49,7 +49,7 @@ export function CreateObjective({ className = "" }: { className: string; }) {
                 completed
             };
 
-            const response = await axios.post('https://api.aminokun.com/api/objective', data);
+            const response = await axios.post('https://asp.aminokun.com/api/objective', data);
             console.log(response.data);
         } catch (error) {
             console.error(error);

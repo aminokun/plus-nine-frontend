@@ -5,6 +5,7 @@ import {
 
 export const objective: IObjectiveItem[] = [
   {
+    objectiveId: "",
     objectiveName: "Pushups",
     currentAmount: 0,
     amountToComplete: 0,
