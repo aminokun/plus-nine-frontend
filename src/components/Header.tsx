@@ -1,25 +1,29 @@
 import { Button } from "@/components/ui/button"
 import { useLocation } from 'react-router-dom'
+import { disablePageScroll, enablePageScroll } from 'scroll-lock'
 import { ModeToggle } from '../components/mode-toggle'
 import { useState } from "react"
 import { navigation } from '../constants/navigation'
 import MenuSvg from "../assets/MenuSvg"
 import { HamburgerMenu } from './HamburgerMenu'
+import ButtonTest from "./ButtonTest"
 
 const Header = () => {
     const pathname = useLocation()
-
     const [openNavigation, setOpenNavigation] = useState(false)
     const toggleNavigation = () => {
         if (openNavigation) {
             setOpenNavigation(false)
+            enablePageScroll()
         } else {
             setOpenNavigation(true)
+            disablePageScroll()
         }
     }
     const handleClick = () => {
         if (!openNavigation) return;
 
+        enablePageScroll()
         setOpenNavigation(false)
     }
 
@@ -57,7 +61,6 @@ const Header = () => {
                                     lg:leading-5 lg:hover:text-n-1 xl:px-12`}
                             >
                                 {item.title}
-
                             </a>
                         ))}
                     </div>
@@ -86,12 +89,12 @@ const Header = () => {
                 <div className="hidden lg:block">
                     <ModeToggle />
                 </div>
-                <Button
+                <ButtonTest
                     className='ml-auto lg:hidden'
                     onClick={toggleNavigation}
                 >
                     <MenuSvg openNavigation={openNavigation} />
-                </Button>
+                </ButtonTest>
             </div>
         </div>
     )
