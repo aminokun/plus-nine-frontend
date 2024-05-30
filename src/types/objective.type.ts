@@ -19,6 +19,7 @@ export interface IObjectiveDataRequest {
   completed: boolean;
 }
 export interface IObjectiveItem {
+  objectiveId: string;
   objectiveName: string;
   currentAmount: number;
   amountToComplete: number;

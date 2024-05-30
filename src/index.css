@@ -64,11 +64,6 @@
   }
 }
 
-main,
-nav {
-  @apply max-w-6xl mx-auto my-12;
-}
-
 p {
   @apply mt-2;
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import axios from "axios"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -25,18 +26,36 @@ import {
 export function CreateObjective({ className = "" }: { className: string; }) {
     const [progress, setProgress] = useState(0)
     const [currentAmount, setCurrentAmount] = useState(0)
+    const [objectiveName, setObjectiveName] = useState("")
     const [amountToComplete, setAmountToComplete] = useState(100)
     const { toast } = useToast()
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (currentAmount > amountToComplete) {
             return toast({
                 title: "Uh oh! Something went wrong",
-                description: "The current amount can not be larger than the total!",
+                description: "The current amount cannot be larger than the total!",
                 variant: "destructive"
-            })
+            });
         }
-    }
+        try {
+            const completed = Completed();
+
+            const data = {
+                objectiveName,
+                currentAmount,
+                amountToComplete,
+                progress,
+                completed
+            };
+
+            const response = await axios.post('https://asp.aminokun.com/api/objective', data);
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const Completed = () => {
         return currentAmount == amountToComplete
     }
@@ -81,6 +100,7 @@ export function CreateObjective({ className = "" }: { className: string; }) {
                                         id="ObjectiveName"
                                         defaultValue=""
                                         placeholder="Example: Push ups"
+                                        onChange={e => setObjectiveName(e.target.value)}
                                         className="col-span-2"
                                     />
                                 </div>
@@ -135,7 +155,7 @@ export function CreateObjective({ className = "" }: { className: string; }) {
                             <DialogFooter>
                                 <Button
                                     type="submit"
-                                    onSubmit={handleSubmit}
+                                    onClick={handleSubmit}
                                 >
                                     Create Objective
                                 </Button>

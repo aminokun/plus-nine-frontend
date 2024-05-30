@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - uses: actions/checkout@v2
@@ -17,12 +17,31 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "14.x"
+          
+      - name: CD to FrontEnd Directory
+        run: cd ~/plus-nine-frontend
+        
+      - name: Change branch
+        run: git checkout main
+        
+      - name: Pull changes
+        run: git pull
+        
+      - name: Install Packages
+        run: npm install
+        
+      - name: Stop current docker container
+        run: docker stop plusnine-react
+        
+      - name: Delete current docker container
+        run: docker rm plusnine-react
+        
+      - name: Remove current FrontEnd Image
+        run: docker rmi --force plusnine-react
+        
+      - name: Build the Docker image
+        run: docker build . -t plusnine-react 
+        
+      - name: Run Docker container
+        run: docker run -d -p 3001:3000 --restart=always --name plusnine-react plusnine-react
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build the app
-        run: npm run build
-
-    # - name: Run tests
-    #   run: npm test
