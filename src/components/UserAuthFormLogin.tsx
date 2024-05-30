@@ -29,7 +29,7 @@ export function UserAuthFormLogin({ className, ...props }: UserAuthFormProps) {
 
         try {
             await login({ username, password });
-            // Optionally redirect the user to a protected page
+            // Redirect is handled in the AuthProvider's login function
         } catch (err) {
             setError('Login failed. Please check your credentials and try again.');
         } finally {

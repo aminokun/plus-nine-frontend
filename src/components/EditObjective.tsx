@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import axios from "axios"
 import { Icons } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -33,6 +32,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { IObjectiveItem } from "@/types/objective.type"
+import axiosInstance from "@/utils/axiosInstance"
 
 
 export function EditObjective({ className = "", id = "", isOpen, onClose, onUpdate }: { className?: string; id: string; isOpen: boolean; onClose: () => void; onUpdate: () => void; }) {
@@ -46,7 +46,7 @@ export function EditObjective({ className = "", id = "", isOpen, onClose, onUpda
 
     const getObjective = async () => {
         try {
-            const response = await axios.get(`https://asp.aminokun.com/api/objective/${id}`);
+            const response = await axiosInstance.get(`https://asp.aminokun.com/api/objective/${id}`);
             console.log(response.data);
             const objective = response.data
             setObjective(objective)
@@ -66,7 +66,7 @@ export function EditObjective({ className = "", id = "", isOpen, onClose, onUpda
         }
         try {
 
-            const response = await axios.delete(`https://asp.aminokun.com/api/objective/${objectiveId}`);
+            const response = await axiosInstance.delete(`https://asp.aminokun.com/api/objective/${objectiveId}`);
             console.log(response.data);
             onClose();
             onUpdate();
@@ -99,7 +99,7 @@ export function EditObjective({ className = "", id = "", isOpen, onClose, onUpda
                 completed
             };
 
-            const response = await axios.put('https://asp.aminokun.com/api/objective', data);
+            const response = await axiosInstance.put('https://asp.aminokun.com/api/objective', data);
             console.log(response.data);
             onClose();
             onUpdate();

@@ -14,6 +14,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
         return null;
     }
 
+    if (authContext.loading) {
+        // Show a loading spinner or placeholder while checking authentication
+        return <div>Loading...</div>;
+    }
+
     return authContext.isAuthenticated ? (
         children
     ) : (
