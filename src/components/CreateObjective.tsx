@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import axios from "axios"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -21,6 +20,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import axiosInstance from "@/utils/axiosInstance"
 
 
 export function CreateObjective({ className = "" }: { className: string; }) {
@@ -49,7 +49,7 @@ export function CreateObjective({ className = "" }: { className: string; }) {
                 completed
             };
 
-            const response = await axios.post('https://asp.aminokun.com/api/objective', data);
+            const response = await axiosInstance.post('https://asp.aminokun.com/api/objective', data);
             console.log(response.data);
         } catch (error) {
             console.error(error);
