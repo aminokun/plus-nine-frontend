@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import axios, { AxiosResponse } from 'axios'
 import { IObjectiveDataResponse } from '@/types/objective.type';
 import { defaultObjectiveResponse } from '@/constants';
 import { EditObjective } from './EditObjective';
+import axiosInstance from '@/utils/axiosInstance';
 
 const ObjectiveCard = () => {
     const [objective, setObjective] = useState(defaultObjectiveResponse)
@@ -11,10 +11,10 @@ const ObjectiveCard = () => {
 
     const refetchObjectives = async () => {
         try {
-            const response: AxiosResponse = await axios.get("https://asp.aminokun.com/api/objective");
+            const response = await axiosInstance.get("/objective");
             const responseData: any = response.data;
             setObjective(responseData);
-            console.log(responseData);
+            // console.log(responseData);
         } catch (error) {
             console.error(error);
         }
@@ -28,7 +28,7 @@ const ObjectiveCard = () => {
     useEffect(() => {
         return () => {
             const fetchObjective = async (): Promise<IObjectiveDataResponse> => {
-                const response: AxiosResponse = await axios.get("https://asp.aminokun.com/api/objective");
+                const response = await axiosInstance.get("/objective");
                 const responseData: any = response.data;
                 setObjective(responseData);
                 console.log(responseData)
@@ -40,7 +40,7 @@ const ObjectiveCard = () => {
 
 
     return (
-        <div className="container flex items-center justify-center -z-10 pt-10">
+        <div className="container flex items-center justify-center pt-10">
             <div className='relative rounded-sm border border-opacity-30 h-[40rem] min-w-[23rem] w-[25rem] border-solo bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#27486B] from-20% via-[#1F3044] via-60% to-[#121A22]' >
                 <div className='absolute h-[1.5rem] w-[90%] bg-gradient-to-b from-solo from-1% blur-md left-5 top-[3rem]  ' />
                 <div className='absolute h-[1.5rem] w-[90%] bg-gradient-to-t from-solo from-1% blur-md left-5 top-[4.9rem]  ' />
@@ -65,7 +65,7 @@ const ObjectiveCard = () => {
                                         key={key}
                                     >
                                         <li
-                                            className="text-shadow-xl dark:text-white pointer-events-auto shadow-black xs:text-md 2xs:text-sm font-normal uppercase"
+                                            className="text-shadow-xl dark:text-white pointer-events-auto cursor-pointer shadow-black xs:text-md 2xs:text-sm font-normal uppercase"
                                         >
                                             <div className="mt-4 flex justify-between">
                                                 <div>
