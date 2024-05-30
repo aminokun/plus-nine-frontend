@@ -1,60 +1,26 @@
-import { Icons } from "@/components/icons"
-import { Button } from "@/components/ui/button"
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { UserAuthFormLogin } from "../components/UserAuthFormLogin"
 
-export default function Login() {
+
+const Login = () => {
+
     return (
-        <div className="flex items-center justify-center">
-            <Card className="">
-                <CardHeader className="space-y-1">
-                    <CardTitle className="text-2xl">Create an account</CardTitle>
-                    <CardDescription>
-                        Enter your email below to create your account
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="grid gap-4">
-                    <div className="grid grid-cols-2 gap-6">
-                        <Button variant="outline">
-                            <Icons.gitHub className="mr-2 h-4 w-4" />
-                            Github
-                        </Button>
-                        <Button variant="outline">
-                            <Icons.discord className="mr-2 h-4 w-4" />
-                            Discord
-                        </Button>
-                    </div>
-                    <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t" />
+        <>
+            <div className="container z-0 relative h-[800px] flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0 mt-20">
+                <div className="lg:p-8">
+                    <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+                        <div className="flex flex-col space-y-2 text-center">
+                            <h1 className="text-2xl font-semibold tracking-tight">
+                                Login to your account
+                            </h1>
+                            <p className="text-sm text-muted-foreground">
+                            </p>
                         </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-background px-2 text-muted-foreground">
-                                Or continue with
-                            </span>
-                        </div>
+                        <UserAuthFormLogin />
                     </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input id="email" type="email" placeholder="hello@example.com" />
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="password">Password</Label>
-                        <Input id="password" type="password" />
-                    </div>
-                </CardContent>
-                <CardFooter>
-                    <Button className="w-full text-white">Create account</Button>
-                </CardFooter>
-            </Card>
-        </div >
+                </div>
+            </div>
+        </>
     )
 }
+
+export default Login
