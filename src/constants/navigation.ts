@@ -1,3 +1,5 @@
+import test from "node:test";
+
 export const navigation = [
     {
         id: "0",
@@ -16,14 +18,15 @@ export const navigation = [
     },
     {
         id: "3",
-        title: "Register",
-        url: "/register",
-        onlyMobile: true,
+        title: "Login",
+        url: "/login",
+        mobile: true,
+
     },
     {
         id: "4",
-        title: "Login",
-        url: "/login",
-        onlyMobile: true,
+        title: "Register",
+        url: "/register",
+        mobile: true,
     },
 ];
