@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from '../context/AuthContext';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Quest from "../pages/Quest";
+import Friends from "../pages/Friends";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Home from "../pages/Home";
@@ -21,6 +22,14 @@ export default function AppRoutes() {
                             element={
                                 <ProtectedRoute>
                                     <Quest />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/friends"
+                            element={
+                                <ProtectedRoute>
+                                    <Friends />
                                 </ProtectedRoute>
                             }
                         />

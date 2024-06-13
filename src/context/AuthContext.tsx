@@ -10,8 +10,13 @@ interface AuthContextType {
 }
 
 
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  isAuthenticated: false,
+  loading: true,
+  login: async () => { },
+  logout: async () => { },
+});
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -42,7 +47,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       const response = await axiosInstance.post('/auth/login', credentials);
       setAuth({ user: response.data.username, isAuthenticated: true, loading: false });
-      // Redirect to the protected route after successful login
       window.location.href = '/quest';
     } catch (error) {
       setAuth((prevState) => ({ ...prevState, loading: false }));
@@ -51,8 +55,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const logout = async () => {
-    await axiosInstance.post('/auth/logout');
-    setAuth({ user: null, isAuthenticated: false, loading: false });
+    try {
+      await axiosInstance.post('/auth/logout');
+      setAuth({ user: null, isAuthenticated: false, loading: false });
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   return (
