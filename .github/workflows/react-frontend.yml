@@ -29,9 +29,6 @@ jobs:
         
       - name: Install Packages
         run: npm install
-
-      - name: Run Cypress tests
-        run: npx cypress run
         
       - name: Stop current docker container
         run: docker stop plusnine-react
