@@ -57,9 +57,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const login = async (credentials: { username: string; password: string }) => {
-    setAuth((prevState) => ({ ...prevState, loading: true }));
     try {
       const response = await axiosInstance.post('/auth/login', credentials);
+      console.log(response.data.customerId)
       setAuth({
         user: {
           username: response.data.username,
@@ -68,7 +68,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
           role: response.data.role,
         }, isAuthenticated: true, loading: false
       });
-      if (response.data.customerId == null) {
+      if (response.data.customerId == null || response.data.customerId == "") {
         const customerResponse = await axiosInstance.post('/stripe/createCustomer', credentials);
         setAuth({
           user: {
@@ -76,7 +76,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
           }, isAuthenticated: true, loading: false
         });
       }
-      window.location.href = '/quest';
+      window.location.href = "/quest";
     } catch (error) {
       setAuth((prevState) => ({ ...prevState, loading: false }));
       throw error;
