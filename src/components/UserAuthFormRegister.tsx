@@ -1,23 +1,47 @@
-import React from 'react'
-import { Icons } from "@/components/icons"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
-
+import React, { useContext, useState } from 'react';
+import { Icons } from "@/components/icons";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
+import { AuthContext } from '../context/AuthContext';
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> { }
 
 export function UserAuthFormRegister({ className, ...props }: UserAuthFormProps) {
-    const [isLoading, setIsLoading] = React.useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [username, setUsername] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [error, setError] = useState<string | null>(null);
+
+    const authContext = useContext(AuthContext);
+
+    if (!authContext) {
+        return null;
+    }
+
+    const { register } = authContext;
 
     async function onSubmit(event: React.SyntheticEvent) {
-        event.preventDefault()
-        setIsLoading(true)
+        event.preventDefault();
+        setIsLoading(true);
+        setError(null);
 
-        setTimeout(() => {
-            setIsLoading(false)
-        }, 3000)
+        if (password !== confirmPassword) {
+            setError('Passwords do not match.');
+            setIsLoading(false);
+            return;
+        }
+
+        try {
+            await register({ username, email, password, confirmPassword });
+        } catch (err) {
+            setError('Registration failed. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
@@ -35,6 +59,19 @@ export function UserAuthFormRegister({ className, ...props }: UserAuthFormProps)
                             autoCapitalize="none"
                             autoCorrect="off"
                             disabled={isLoading}
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                        <Input
+                            id="email"
+                            placeholder="Email"
+                            type="text"
+                            autoCapitalize="none"
+                            autoCorrect="off"
+                            disabled={isLoading}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className='mb-4'
                         />
                         <Input
                             id="password"
@@ -43,6 +80,8 @@ export function UserAuthFormRegister({ className, ...props }: UserAuthFormProps)
                             autoCapitalize="none"
                             autoCorrect="off"
                             disabled={isLoading}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
                         <Input
                             id="confirmpassword"
@@ -51,10 +90,12 @@ export function UserAuthFormRegister({ className, ...props }: UserAuthFormProps)
                             autoCapitalize="none"
                             autoCorrect="off"
                             disabled={isLoading}
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
                         />
-
                     </div>
-                    <Button disabled={isLoading}>
+                    {error && <p className="text-red-500 text-sm">{error}</p>}
+                    <Button type="submit" disabled={isLoading}>
                         {isLoading && (
                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                         )}
@@ -81,5 +122,5 @@ export function UserAuthFormRegister({ className, ...props }: UserAuthFormProps)
                 GitHub
             </Button>
         </div>
-    )
+    );
 }

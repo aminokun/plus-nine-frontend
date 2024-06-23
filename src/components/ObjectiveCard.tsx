@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
-import { IObjectiveDataResponse } from '@/types/objective.type';
 import { defaultObjectiveResponse } from '@/constants';
 import { EditObjective } from './EditObjective';
+import { IObjectiveDataResponse } from '@/types/objective.type';
 import axiosInstance from '@/utils/axiosInstance';
+import axios from 'axios';
+import { useToast } from './ui/use-toast';
 
 const ObjectiveCard = () => {
     const [objective, setObjective] = useState(defaultObjectiveResponse)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedObjectiveId, setSelectedObjectiveId] = useState('');
+    const { toast } = useToast();
 
     const refetchObjectives = async () => {
         try {
@@ -15,13 +18,22 @@ const ObjectiveCard = () => {
             const responseData: any = response.data;
             setObjective(responseData);
             // console.log(responseData);
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.data?.message) {
+                    return toast({
+                        title: "Error getting quest:",
+                        description: error.response.data.message,
+                        variant: "destructive"
+                    });
+                }
+            }
         }
     };
 
     const handleEdit = async (id: string) => {
         setSelectedObjectiveId(id);
+        console.log(id);
         setIsEditModalOpen(true);
     };
 
@@ -60,8 +72,9 @@ const ObjectiveCard = () => {
                             <ul className="overflow-hidden container overflow-y-auto scroll-smooth rounded-sm border-y-2 border-opacity-30 max-h-[14.5rem] min-h-[10.5rem] border-solo">
                                 {objective.map((item, key) => (
                                     <a
-                                        onClick={() => handleEdit(item.id)}
+                                        onClick={() => handleEdit(item.objectiveId)}
                                         className=""
+                                        id="target-element"
                                         key={key}
                                     >
                                         <li

@@ -17,7 +17,7 @@ export function UserAuthFormLogin({ className, ...props }: UserAuthFormProps) {
     const authContext = useContext(AuthContext);
 
     if (!authContext) {
-        return null; // or handle loading state
+        return null;
     }
 
     const { login } = authContext;
@@ -29,7 +29,6 @@ export function UserAuthFormLogin({ className, ...props }: UserAuthFormProps) {
 
         try {
             await login({ username, password });
-            // Redirect is handled in the AuthProvider's login function
         } catch (err) {
             setError('Login failed. Please check your credentials and try again.');
         } finally {

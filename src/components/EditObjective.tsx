@@ -46,7 +46,7 @@ export function EditObjective({ className = "", id = "", isOpen, onClose, onUpda
 
     const getObjective = async () => {
         try {
-            const response = await axiosInstance.get(`https://asp.aminokun.com/api/objective/${id}`);
+            const response = await axiosInstance.get(`/objective/${id}`);
             console.log(response.data);
             const objective = response.data
             setObjective(objective)
@@ -66,7 +66,7 @@ export function EditObjective({ className = "", id = "", isOpen, onClose, onUpda
         }
         try {
 
-            const response = await axiosInstance.delete(`https://asp.aminokun.com/api/objective/${objectiveId}`);
+            const response = await axiosInstance.delete(`/objective/${objectiveId}`);
             console.log(response.data);
             onClose();
             onUpdate();
@@ -99,7 +99,7 @@ export function EditObjective({ className = "", id = "", isOpen, onClose, onUpda
                 completed
             };
 
-            const response = await axiosInstance.put('https://asp.aminokun.com/api/objective', data);
+            const response = await axiosInstance.put('/objective', data);
             console.log(response.data);
             onClose();
             onUpdate();
@@ -174,7 +174,10 @@ export function EditObjective({ className = "", id = "", isOpen, onClose, onUpda
                                     />
                                 </div>
                                 <div className="grid grid-cols-3 items-center gap-4">
-                                    <Label htmlFor="currentAmount" className="text-right">
+                                    <Label
+                                        data-cy="target-element"
+                                        htmlFor="currentAmount"
+                                        className="text-right">
                                         Current Amount
                                     </Label>
                                     <Input
@@ -224,7 +227,7 @@ export function EditObjective({ className = "", id = "", isOpen, onClose, onUpda
                             <DialogFooter >
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
-                                        <Icons.trash className="mt-2 h-6 w-6" />
+                                        <Icons.trash id="trash" className="mt-2 h-6 w-6" />
                                     </AlertDialogTrigger>
                                     <AlertDialogContent>
                                         <AlertDialogHeader>
@@ -236,14 +239,17 @@ export function EditObjective({ className = "", id = "", isOpen, onClose, onUpda
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
                                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
+                                            <AlertDialogAction id='delete-objective' onClick={handleDelete}>Continue</AlertDialogAction>
                                         </AlertDialogFooter>
                                     </AlertDialogContent>
                                 </AlertDialog>
                                 <Button variant="outline" onClick={onClose}>
                                     Cancel
                                 </Button>
-                                <Button type="submit" onClick={handleChanges}>
+                                <Button
+                                    id="submit-changes"
+                                    type="submit"
+                                    onClick={handleChanges}>
                                     Save Changes
                                 </Button>
                             </DialogFooter>

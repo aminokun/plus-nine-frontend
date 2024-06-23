@@ -6,7 +6,8 @@ export interface IObjectiveDataResponse {
   amountToComplete: number;
   progress: number;
   completed: boolean;
-  id: string;
+  objectiveId: string;
+  userId: string;
   addedDate: string;
   updatedDate: string;
   status: number;
@@ -20,6 +21,7 @@ export interface IObjectiveDataRequest {
 }
 export interface IObjectiveItem {
   objectiveId: string;
+  userId: string;
   objectiveName: string;
   currentAmount: number;
   amountToComplete: number;
