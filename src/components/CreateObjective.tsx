@@ -12,7 +12,6 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
 import {
     Tooltip,
@@ -23,7 +22,7 @@ import {
 import axiosInstance from "@/utils/axiosInstance"
 
 
-export function CreateObjective({ className = "" }: { className: string; }) {
+export function CreateObjective({ className = "", isOpen, onClose }: { className?: string; isOpen: boolean; onClose: () => void; }) {
     const [progress, setProgress] = useState(0)
     const [currentAmount, setCurrentAmount] = useState(0)
     const [objectiveName, setObjectiveName] = useState("")
@@ -35,6 +34,13 @@ export function CreateObjective({ className = "" }: { className: string; }) {
             return toast({
                 title: "Uh oh! Something went wrong",
                 description: "The current amount cannot be larger than the total!",
+                variant: "destructive"
+            });
+        }
+        if (objectiveName == "") {
+            return toast({
+                title: "Uh oh! Something went wrong",
+                description: "The name of the objective can not be empty",
                 variant: "destructive"
             });
         }
@@ -51,10 +57,14 @@ export function CreateObjective({ className = "" }: { className: string; }) {
 
             const response = await axiosInstance.post('/objective', data);
             console.log(response.data);
+            onClose();
+            window.location.reload();
         } catch (error) {
             console.error(error);
         }
+
     };
+
 
     const Completed = () => {
         return currentAmount == amountToComplete
@@ -72,6 +82,8 @@ export function CreateObjective({ className = "" }: { className: string; }) {
         const timer = setTimeout(() => setProgress(progressPercentage), 500)
         return () => clearTimeout(timer)
     }
+
+
     useEffect(() => {
         progressCalc(currentAmount, amountToComplete);
     }, [currentAmount, amountToComplete]);
@@ -80,10 +92,7 @@ export function CreateObjective({ className = "" }: { className: string; }) {
         <div className={`${className}`}>
             <TooltipProvider>
                 <Tooltip delayDuration={300}>
-                    <Dialog >
-                        <DialogTrigger asChild>
-                            <Button variant="outline">Add Objective</Button>
-                        </DialogTrigger>
+                    <Dialog open={isOpen} onOpenChange={onClose}>
                         <DialogContent className="2xs:max-w-[370px] xs:max-w-[555px]">
                             <DialogHeader>
                                 <DialogTitle>Add Objective</DialogTitle>

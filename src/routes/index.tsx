@@ -3,6 +3,7 @@ import { AuthProvider } from '../context/AuthContext';
 import ProtectedRoute from '../components/ProtectedRoute';
 import Quest from "../pages/Quest";
 import Friends from "../pages/Friends";
+import User from "../pages/User";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Home from "../pages/Home";
@@ -30,6 +31,14 @@ export default function AppRoutes() {
                             element={
                                 <ProtectedRoute>
                                     <Friends />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/user"
+                            element={
+                                <ProtectedRoute>
+                                    <User />
                                 </ProtectedRoute>
                             }
                         />

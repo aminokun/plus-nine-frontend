@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { IObjectiveDataResponse } from '@/types/objective.type';
 import { defaultObjectiveResponse } from '@/constants';
 import { EditObjective } from './EditObjective';
+import { IObjectiveDataResponse } from '@/types/objective.type';
 import axiosInstance from '@/utils/axiosInstance';
 
 const ObjectiveCard = () => {
@@ -22,6 +22,7 @@ const ObjectiveCard = () => {
 
     const handleEdit = async (id: string) => {
         setSelectedObjectiveId(id);
+        console.log(id);
         setIsEditModalOpen(true);
     };
 
@@ -60,7 +61,7 @@ const ObjectiveCard = () => {
                             <ul className="overflow-hidden container overflow-y-auto scroll-smooth rounded-sm border-y-2 border-opacity-30 max-h-[14.5rem] min-h-[10.5rem] border-solo">
                                 {objective.map((item, key) => (
                                     <a
-                                        onClick={() => handleEdit(item.id)}
+                                        onClick={() => handleEdit(item.objectiveId)}
                                         className=""
                                         key={key}
                                     >
