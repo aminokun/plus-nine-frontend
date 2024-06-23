@@ -74,6 +74,7 @@ const ObjectiveCard = () => {
                                     <a
                                         onClick={() => handleEdit(item.objectiveId)}
                                         className=""
+                                        id="target-element"
                                         key={key}
                                     >
                                         <li
