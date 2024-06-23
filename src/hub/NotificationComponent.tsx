@@ -42,10 +42,24 @@ const NotificationComponent = () => {
             try {
                 await connect.start();
                 console.log('Connected!');
+
                 connect.on('ReceiveFriendRequest', (message) => {
                     console.log('Received Friend Request:', message);
                     return toast({
                         description: "Received Friend Request",
+                    });
+                });
+                connect.on('FriendRequestAccepted', (message) => {
+                    console.log('Friend Request Accepted:', message);
+                    return toast({
+                        description: "Friend Request Accepted",
+                    });
+                });
+                connect.on('FriendRequestRejected', (message) => {
+                    console.log('Friend Request Rejected:', message);
+                    return toast({
+                        variant: "destructive",
+                        description: "Friend Request Rejected",
                     });
                 });
             } catch (error) {

@@ -3,11 +3,14 @@ import { defaultObjectiveResponse } from '@/constants';
 import { EditObjective } from './EditObjective';
 import { IObjectiveDataResponse } from '@/types/objective.type';
 import axiosInstance from '@/utils/axiosInstance';
+import axios from 'axios';
+import { useToast } from './ui/use-toast';
 
 const ObjectiveCard = () => {
     const [objective, setObjective] = useState(defaultObjectiveResponse)
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedObjectiveId, setSelectedObjectiveId] = useState('');
+    const { toast } = useToast();
 
     const refetchObjectives = async () => {
         try {
@@ -15,8 +18,16 @@ const ObjectiveCard = () => {
             const responseData: any = response.data;
             setObjective(responseData);
             // console.log(responseData);
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            if (axios.isAxiosError(error)) {
+                if (error.response?.data?.message) {
+                    return toast({
+                        title: "Error getting quest:",
+                        description: error.response.data.message,
+                        variant: "destructive"
+                    });
+                }
+            }
         }
     };
 
@@ -63,6 +74,7 @@ const ObjectiveCard = () => {
                                     <a
                                         onClick={() => handleEdit(item.objectiveId)}
                                         className=""
+                                        id="target-element"
                                         key={key}
                                     >
                                         <li
