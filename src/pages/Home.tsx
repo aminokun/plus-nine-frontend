@@ -21,10 +21,10 @@ const Home = () => {
                     Start for free
                 </a>
                 <a
-                    href="/premium"
+                    href="/"
                     className="bg-gradient-to-r from-blue-500 to-blue-800 py-3 px-4 mx-3 rounded-md"
                 >
-                    Get premium
+                    Read docs
                 </a>
             </div>
             <div className="flex sm:flex-row mt-4 2xs:flex-col border-2 sm:items-start 2xs:items-center justify-center">
